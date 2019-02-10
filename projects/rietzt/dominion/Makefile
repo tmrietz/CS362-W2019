@@ -54,6 +54,8 @@ runtests: testDrawCard unittest1.o
 	cat dominion.c.gcov >> unittestresult.out
 
 unittestresults: dominion.o unittest1.o unittest2.o unittest3.o unittest4.o cardtest1.o cardtest2.o cardtest3.o cardtest4.o
+	chmod +x getUnitCoverage.sh
+	chmod +x getFullCoverage.sh
 	rm -f unittestresults.out
 	./getFullCoverage.sh
 
@@ -64,3 +66,5 @@ all: playdom player
 
 clean:
 	rm -f *.o playdom.exe playdom player player.exe *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
+	rm -f unittest1 unittest2 unittest3 unittest4 cardtest1 cardtest2 cardtest3 cardtest4
+	rm -rf *.dSYM
