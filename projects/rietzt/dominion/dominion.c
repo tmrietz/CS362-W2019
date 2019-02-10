@@ -392,24 +392,20 @@ int isGameOver(struct gameState *state) {
   int j;
 	
   //if stack of Province cards is empty, the game ends
-  if (state->supplyCount[province] == 0)
-    {
-      return 1;
-    }
+  if (state->supplyCount[province] == 0){
+    return 1;
+  }
 
   //if three supply pile are at 0, the game ends
   j = 0;
-  for (i = 0; i < 25; i++)
-    {
-      if (state->supplyCount[i] == 0)
-	{
-	  j++;
-	}
-    }
-  if ( j >= 3)
-    {
-      return 1;
-    }
+  for (i = 0; i < 25; i++){
+    if (state->supplyCount[i] == 0){
+	    j++;
+	  }
+  }
+  if ( j >= 3){
+    return 1;
+  }
 
   return 0;
 }
@@ -790,6 +786,18 @@ void minionEffect(int currentPlayer, int choice1, int choice2, int handPos, stru
   }
 }
 
+void villageEffect(int currentPlayer, int handPos, struct gameState* state){
+  //+1 Card
+  drawCard(currentPlayer, state);
+  
+  //+2 Actions
+  state->numActions = state->numActions + 2;
+  
+  //discard played card from hand
+  discardCard(handPos, currentPlayer, state, 0);
+}
+
+
 
 int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
 {
@@ -961,14 +969,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return 0;
 
     case village:
-      //+1 Card
-      drawCard(currentPlayer, state);
-			
-      //+2 Actions
-      state->numActions = state->numActions + 2;
-			
-      //discard played card from hand
-      discardCard(handPos, currentPlayer, state, 0);
+      villageEffect(currentPlayer, handPos, state);
       return 0;
 		
     case baron:
@@ -1297,29 +1298,22 @@ int gainCard(int supplyPos, struct gameState *state, int toFlag, int player)
   return 0;
 }
 
-int updateCoins(int player, struct gameState *state, int bonus)
-{
+int updateCoins(int player, struct gameState *state, int bonus){
   int i;
 	
   //reset coin count
   state->coins = 0;
 
   //add coins for each Treasure card in player's hand
-  for (i = 0; i < state->handCount[player]; i++)
-    {
-      if (state->hand[player][i] == copper)
-	{
-	  state->coins += 1;
-	}
-      else if (state->hand[player][i] == silver)
-	{
-	  state->coins += 2;
-	}
-      else if (state->hand[player][i] == gold)
-	{
-	  state->coins += 3;
-	}	
+  for (i = 0; i < state->handCount[player]; i++){
+    if (state->hand[player][i] == copper){
+      state->coins += 1;
+    } else if (state->hand[player][i] == silver){
+      state->coins += 2;
+    } else if (state->hand[player][i] == gold){
+        state->coins += 3;
     }	
+  }	
 
   //add bonus
   state->coins += bonus;
