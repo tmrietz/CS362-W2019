@@ -33,7 +33,7 @@ int main() {
   if(! handCard(MAX_HAND, state)){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * handCard::accessible::minEdge
@@ -43,7 +43,7 @@ int main() {
   if(! handCard(0, state)){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * handCard::accessible::mid
@@ -53,7 +53,7 @@ int main() {
   if(! handCard(250, state)){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * handCard::correctResult
@@ -65,10 +65,10 @@ int main() {
   if(handCard(0, state) != smithy || handCard(5, state) != adventurer){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "handCard::OVERALL";
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 1);
 
   return 0;
 }

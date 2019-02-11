@@ -81,7 +81,7 @@ int main() {
   updateCoins(0, state, 0);
   if( state->coins != MAX_HAND * 3 )
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * updateCoins::allSilver
@@ -91,7 +91,7 @@ int main() {
   updateCoins(1, state, 0);
   if( state->coins != MAX_HAND * 2 )
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * updateCoins::allCopper
@@ -101,7 +101,7 @@ int main() {
   updateCoins(2, state, 0);
   if( state->coins != MAX_HAND )
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * updateCoins::allEvenlyDistributed
@@ -112,7 +112,7 @@ int main() {
   updateCoins(3, state, 0);
   if( state->coins != 600 )
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 
   setTestInput2(players, MAX_HAND, state);
@@ -124,7 +124,7 @@ int main() {
   updateCoins(0, state, 0);
   if( state->coins != 0 )
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * updateCoins::halfGold
@@ -134,10 +134,10 @@ int main() {
   updateCoins(1, state, 0);
   if( state->coins != (MAX_HAND/2) * 3 )
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "updateCoins::OVERALL";
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 1);
 
   return 0;
 }

@@ -75,7 +75,7 @@ int main() {
   if(state->numPlayers != players){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);  
+  assertTrue(result, &overallResult, testName, 0);  
 
 /*
 * fullDeckCount::correctResult
@@ -94,10 +94,10 @@ int main() {
     }
     overallResult = result;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "fullDeckCount::OVERALL";
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 1);
 
   return 0;
 }

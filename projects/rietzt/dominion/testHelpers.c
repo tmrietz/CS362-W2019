@@ -10,7 +10,16 @@ void newTestInstance(int players, int kingdomCards[10], int seed, struct gameSta
   initializeGame(players, kingdomCards, seed, state);
 }
 
-void assertTrue(int testResult, int* overallResult, char* testName){
+void assertTrue(int testResult, int* overallResult, char* testName, int isOverall){
+  if(isOverall){
+    if(*overallResult == 1){
+      printf("----------------------------------------------------%s\n\tPASSED\n\n", testName);
+    } else {
+      printf("----------------------------------------------------%s\n\tFAILED\n\n", testName);
+    }
+    return;
+  }
+  
   if(testResult == 1){
     printf("----------------------------------------------------%s\n\tPASSED\n\n", testName);
   } else {

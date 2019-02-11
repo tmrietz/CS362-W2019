@@ -8,7 +8,7 @@
 
 void newTestInstance(int players, int kingdomCards[10], int seed, struct gameState* state);
 
-void assertTrue(int result, int* overallResult, char* testName);
+void assertTrue(int result, int* overallResult, char* testName, int isOverall);
 
 void resetResult(int* result);
 

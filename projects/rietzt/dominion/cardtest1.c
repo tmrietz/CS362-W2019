@@ -36,7 +36,7 @@ int main() {
   if(state->handCount[player] != initialHandCount + 2){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * smithy::discarded::nonEdge
@@ -47,7 +47,7 @@ int main() {
   if(state->hand[player][handPos] == smithy){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * smithy::adds3Cards::maxEdge
@@ -60,7 +60,7 @@ int main() {
   if(state->handCount[player] != initialHandCount + 2){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * smithy::discarded::maxEdge
@@ -71,7 +71,7 @@ int main() {
   if(state->hand[player][state->handCount[player]-1] == smithy){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * smithy::adds3Cards::minEdge
@@ -84,7 +84,7 @@ int main() {
   if(state->handCount[player] != initialHandCount + 2){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * smithy::discarded::minEdge
@@ -92,13 +92,13 @@ int main() {
   testName = "smithy::discarded::minEdge";
   resetResult(&result);
   cardEffect(smithy, 0, 0, 0, state, handPos, 0);
-  if(state->hand[player][0] == smithy){
+  if(state->hand[player][handPos] == smithy){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "smithy::OVERALL";
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 1);
 
   return 0;
 }

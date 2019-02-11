@@ -37,7 +37,7 @@ int main() {
   if(getTreasure(player, state) != initialTreasure + 2){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * adventurer::handCount+=1
@@ -49,7 +49,7 @@ int main() {
   if(state->handCount[player] != initialHandCount + 1){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * adventurer::doesShuffle
@@ -61,7 +61,7 @@ int main() {
   if(state->deckCount[player] <= 0){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * adventurer::discardGrows
@@ -78,10 +78,10 @@ int main() {
   if(state->discardCount[player] <= initialDiscardCount || state->discardCount[player] < 2){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "adventurer::OVERALL";
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 1);
 
   return 0;
 }

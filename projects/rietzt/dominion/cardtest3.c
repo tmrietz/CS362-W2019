@@ -64,7 +64,7 @@ int main() {
   if(state->coins != initialTreasure + 2){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * ccutpurse::copperCounts::correctResults
@@ -79,7 +79,7 @@ int main() {
       getCopperCount(3,state)!= 0) {
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * cutpurse::copperDiscard::correctResults
@@ -93,10 +93,10 @@ int main() {
       state->discardCount[3] != 0) {
         result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "cutpurse::OVERALL";
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 1);
 
   return 0;
 }

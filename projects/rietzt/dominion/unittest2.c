@@ -40,21 +40,21 @@ int main() {
   state->supplyCount[province] = 1;
   if(isGameOver(state))
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "isGameOver::provinceTesting::fullProvinceSupply";
   resetResult(&result);
   state->supplyCount[province] = 8;
   if(isGameOver(state))
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "isGameOver::provinceTesting::noProvinceSupply";
   resetResult(&result);
   state->supplyCount[province] = 0;
   if(! isGameOver(state))
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * isGameOver::supplyTesting
@@ -68,17 +68,17 @@ int main() {
   state->supplyCount[24] = 0;
   if(! isGameOver(state))
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "isGameOver::supplyTesting::gameNotOver";
   resetResult(&result);
   state->supplyCount[0] = 1;
   if(isGameOver(state))
     result = 0;
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "isGameOver::OVERALL";
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 1);
 
   return 0;
 }

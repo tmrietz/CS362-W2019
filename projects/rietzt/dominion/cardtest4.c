@@ -35,7 +35,7 @@ int main() {
   if(state->handCount[player] != initialHandCount){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
 /*
 * village::adds2Actions
@@ -46,10 +46,10 @@ int main() {
   if(state->numActions != initialActionCount + 2){
     result = 0;
   }
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 0);
 
   testName = "village::OVERALL";
-  assertTrue(result, &overallResult, testName);
+  assertTrue(result, &overallResult, testName, 1);
 
   return 0;
 }
