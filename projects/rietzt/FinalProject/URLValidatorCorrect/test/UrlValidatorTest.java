@@ -99,10 +99,6 @@ public class UrlValidatorTest extends TestCase {
          }
          String url = testBuffer.toString();
          boolean result = urlVal.isValid(url);
-         if ((printed == 0 && result) || (printed == 1 && !result)) {
-        	 System.out.print(result + ": " + url + "\n");
-        	 printed++;
-         }
          assertEquals(url, expected, result);
          if (printStatus) {
             if (printIndex) {
