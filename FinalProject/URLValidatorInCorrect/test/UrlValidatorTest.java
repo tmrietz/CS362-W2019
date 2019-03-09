@@ -177,7 +177,7 @@ public class UrlValidatorTest extends TestCase {
 	   System.out.println("Enter a url for manual testing (enter 'q' to quit): \n");
 	   url = input.nextLine();
 	   
-	   while (url != "q")
+	   while (!"q".equals(url))
 	   {
 		   
 		   if ( urlVal.isValid(url) )
