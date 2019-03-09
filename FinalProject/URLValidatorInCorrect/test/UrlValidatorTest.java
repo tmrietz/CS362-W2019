@@ -1,6 +1,7 @@
 
 
 import junit.framework.TestCase;
+import java.util.Scanner;
 
 //You can use this as a skeleton for your 3 different test approach
 //It is an optional to use this file, you can generate your own test file(s) to test the target function!
@@ -131,10 +132,84 @@ public class UrlValidatorTest extends TestCase {
    
    public void testIsValid()
    {
-	   //You can use this function for programming based testing
+	   
+	   UrlValidator urlVal = new UrlValidator(null, null,
+			   UrlValidator.ALLOW_2_SLASHES 
+			   + UrlValidator.ALLOW_ALL_SCHEMES
+			   + UrlValidator.NO_FRAGMENTS
+			   + UrlValidator.ALLOW_LOCAL_URLS);
+	   
+	   
+	   String[] urlArray = {
+			   "http://www.google.com/russell/hi.pdf",
+			   "http://www.google.com/help/me",
+			   "http://www.google.com/helloworld.pdf",
+			   "http://www.pets.com"
+	   };
+	   
+	   for(int i = 0; i < urlArray.length; i++ )
+	   {
+		   if ( !customAssertEquals(true, urlVal.isValid(urlArray[i])) )
+		   {
+			   System.out.println("Expected valid, but test returns invalid: " + urlArray[i]);
+			   
+		   }
+	   }
+	   
+	  
 
    }
    
+   public void testRussellManualTest()
+   {
+	   UrlValidator urlVal = new UrlValidator(null, null,
+			   UrlValidator.ALLOW_2_SLASHES 
+			   + UrlValidator.ALLOW_ALL_SCHEMES
+			   + UrlValidator.NO_FRAGMENTS
+			   + UrlValidator.ALLOW_LOCAL_URLS);
+	   
+	   @SuppressWarnings("resource")
+	   Scanner input = new Scanner(System.in);
+	   
+	   String url ="";
+	   
+	   System.out.println("*******MANUAL TESTING*******\n\n");
+	   System.out.println("Enter a url for manual testing (enter 'q' to quit): \n");
+	   url = input.nextLine();
+	   
+	   while (url != "q")
+	   {
+		   
+		   if ( urlVal.isValid(url) )
+		   {
+			   System.out.println("Returns valid: " + url);
+		   }
+		   
+		   else
+		   {
+			   System.out.println("Returns not valid: " + url);
+		   }
+		   
+		   System.out.println("Enter a url for manual testing (enter 'q' to quit): \n");
+		   url = input.nextLine();
+	   }
+	   
+   }
 
+ 
+   
+   private boolean customAssertEquals(boolean val1, boolean val2)
+   {
+	   if (val1 == val2)
+	   {
+		   return true;
+	   }
+	    
+		return false;
+   }
+   
 
 }
+
+
+
