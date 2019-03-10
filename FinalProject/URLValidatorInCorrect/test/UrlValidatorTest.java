@@ -47,13 +47,14 @@ public class UrlValidatorTest extends TestCase {
 //			   "hTtP://www.google.com",							// faults
 //			   "https://www.google.com",						// faults
 //	           "h3t://www.google.com",							// faults
-//	           "ftp://www.google.com",							// faults in -- if (!isValidAuthority(authority))
-//	           "file:///C:/some.file",							// faults
+//			   "ftp://www.google.com",							// faults in -- if (!isValidAuthority(authority))
+//			   "file:///C:/some.file",							// faults
 			   "http://www.google.com/test1//file",				// fails in -- if (!isValidPath(urlMatcher.group(PARSE_URL_PATH)
 			   "http://www.google.com/test1/file",				// fails in -- if (!isValidPath(urlMatcher.group(PARSE_URL_PATH)
 			   "http://www.google.com:80",						// fails in -- if (authority.contains(":")
 			   "http://www.google.com/test1/index.html",		// fails in -- if (!isValidPath(urlMatcher.group(PARSE_URL_PATH)
 			   "http://www.google.com/hello..world",			// fails
+			   "http://user:@www.apache.org",					// fails
 			   "http://www.google.com",
 	           "http://www.google.com/",
 	           "http://www.google.com/test1",
@@ -73,16 +74,33 @@ public class UrlValidatorTest extends TestCase {
 	           "http://www.google.com/.../world",
 	           "http://www.google.com/hell",
 	           "http://example.com/serach?address=Main%20Avenue",
+	           "http://www.google.com/file.c",
 	           
 	   };
 	   
+	   // This list of URLs are bad -- failures here mean that the application failed to report the failure
 	   String[] shouldNotWork = {
+//			   "httpd://www.google.com",						// faults
 			   "http://broke.hostname",							// fails
 			   "http://www.google.com../",						// fails
+			   "http://www.google@com",							// fails
+			   "http://256.256.256.256",						// fails
+			   "http://1.2.3.4.5",								// fails
 			   "http://broke.my-test/test/index.html",
 			   "http://first.my-testing/test/index.html",
 			   "http://example.com/serach?address=Main Avenue",
 			   "http://www.google.com:65536",
+			   "http:\\www.google.com",
+			   "/http://www.google.com",
+			   "ht_tp://www.google.com",
+			   "http:.//www.google.com",
+			   "http://www.google.com/..",
+			   "http://www.google.com/../file",
+			   "http://www.google.com/#/file",
+			   "http://www.google.com/#",
+			   "http://www.google.com:-1",
+			   "http://www.google.com:65a",
+
 			   
 	   };
 	   
