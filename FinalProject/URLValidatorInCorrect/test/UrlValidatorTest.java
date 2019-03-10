@@ -172,7 +172,6 @@ public class UrlValidatorTest extends TestCase {
 		   if ( !customAssertEquals(false, urlVal.isValid(urlIncorrect[i])) )
 		   {
 			   System.out.println("Expected invalid, but test returns valid: " + urlIncorrect[i]);
-			   
 		   }
 	   }
 	   
