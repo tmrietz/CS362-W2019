@@ -137,21 +137,41 @@ public class UrlValidatorTest extends TestCase {
 			   UrlValidator.ALLOW_2_SLASHES 
 			   + UrlValidator.ALLOW_ALL_SCHEMES
 			   + UrlValidator.NO_FRAGMENTS
-			   + UrlValidator.ALLOW_LOCAL_URLS);
+			   //+ UrlValidator.ALLOW_LOCAL_URLS
+			   );
 	   
 	   
-	   String[] urlArray = {
+	   String[] urlCorrect = {
 			   "http://www.google.com/russell/hi.pdf",
 			   "http://www.google.com/help/me",
 			   "http://www.google.com/helloworld.pdf",
-			   "http://www.pets.com"
+			   "http://www.pets.com",
+			   "http://www.pets.com:80"
 	   };
 	   
-	   for(int i = 0; i < urlArray.length; i++ )
+	   
+	   String[] urlIncorrect = {
+			   "http://www.google.com/../",
+			   "http://256.256.256.256"
+	   };
+	   
+	   
+	   for(int i = 0; i < urlCorrect.length; i++ )
 	   {
-		   if ( !customAssertEquals(true, urlVal.isValid(urlArray[i])) )
+		   if ( !customAssertEquals(true, urlVal.isValid(urlCorrect[i])) )
 		   {
-			   System.out.println("Expected valid, but test returns invalid: " + urlArray[i]);
+			   System.out.println("Expected valid, but test returns invalid: " + urlCorrect[i]);
+			   
+		   }
+	   }
+	   
+	   
+	   
+	   for(int i = 0; i < urlIncorrect.length; i++ )
+	   {
+		   if ( !customAssertEquals(false, urlVal.isValid(urlIncorrect[i])) )
+		   {
+			   System.out.println("Expected invalid, but test returns valid: " + urlIncorrect[i]);
 			   
 		   }
 	   }
