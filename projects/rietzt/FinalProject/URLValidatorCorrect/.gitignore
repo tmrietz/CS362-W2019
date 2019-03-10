@@ -2,4 +2,3 @@
 *.vscode
 .classpath
 *.DS_*
-/bin/
