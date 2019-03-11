@@ -1,7 +1,6 @@
-
-
 import junit.framework.TestCase;
 import java.util.Scanner;
+import java.util.Random;
 
 //You can use this as a skeleton for your 3 different test approach
 //It is an optional to use this file, you can generate your own test file(s) to test the target function!
@@ -16,7 +15,22 @@ public class UrlValidatorTest extends TestCase {
 
    public UrlValidatorTest(String testName) {
       super(testName);
-   }
+	 }
+	 
+	 		// - Initialize some valid URL pieces we can use to programatically generate url strings
+		// - Instead of initializing invalid URL pieces for *all* of these, we can use valid separators
+		//	 in incorrect places
+		private String validQuerySeparators = "$-_.+!*'(),";
+		private String validSchemeSeparator = "://";
+		private String validPortSeparator = ":";
+		private String validDomainSeparator = ".";
+		private String validPathSeparator = "/";
+		private String validFragmentSeparator = "#";
+		private String invalidSeparators = "<>\\~{}\"";
+		private String[] someValidSubDomains = {"test","www","any","string","0r","numer1c","is--alright"};
+		private String[] someValidTLDs = {"com", "org", "aaa", "blog", "net", "uk", "gov", "edu"};
+		private String[] someInvalidTLDs = {"20", "inValid", "alsoInvalid", "not_This_Time", "\"", "^", "&"};
+		private String[] someValidProtocols = {"http","https","ftp"};
 
    public void myAssert(String url, boolean actual, boolean expected) {
 	   
@@ -213,10 +227,9 @@ public class UrlValidatorTest extends TestCase {
 		   url = input.nextLine();
 	   }
 	   
-   }
+	 }
+	 
 
- 
-   
    private boolean customAssertEquals(boolean val1, boolean val2)
    {
 	   if (val1 == val2)
@@ -226,7 +239,8 @@ public class UrlValidatorTest extends TestCase {
 	    
 		return false;
    }
-   
+	 
+
 
 }
 
