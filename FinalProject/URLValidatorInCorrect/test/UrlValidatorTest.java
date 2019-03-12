@@ -218,7 +218,111 @@ public class UrlValidatorTest extends TestCase {
    
    
    
-   public void testRussellManualTest()
+   public void testUnitTestPort()
+   {
+	   
+	   UrlValidator urlVal = new UrlValidator(null, null,
+			   UrlValidator.ALLOW_2_SLASHES 
+			   + UrlValidator.ALLOW_ALL_SCHEMES
+			   + UrlValidator.NO_FRAGMENTS
+			   + UrlValidator.ALLOW_LOCAL_URLS
+			   );
+	      
+	   String[] validPort = {
+			   ":80",
+			   ":65535",
+			   ":0",
+			   ""
+
+	   };
+	  
+	   String[] invalidPort = {
+			   ":65536",
+			   ":-1",
+			   ":65636",
+			   ":999999999999999999",
+			   ":65a"
+
+	   };
+	   
+	   System.out.println("\n*******TESTING PORT*******");
+	   
+	   urlTester(urlVal, "www.google.com", "", validPort, invalidPort);
+	    
+	   System.out.println("********************************\n");
+   }
+   
+   
+   
+   public void testUnitTestPath()
+   {
+	   
+	   UrlValidator urlVal = new UrlValidator(null, null,
+			   UrlValidator.ALLOW_2_SLASHES 
+			   + UrlValidator.ALLOW_ALL_SCHEMES
+			   + UrlValidator.NO_FRAGMENTS
+			   + UrlValidator.ALLOW_LOCAL_URLS
+			   );
+	      
+	   String[] validPath = {
+			   "/test1",
+			   "/t123",
+			   "/$23",
+			   "/test1/",
+			   "",
+			   "/test1/file",
+			   "/t123/file",
+			   "/$23/file",
+			   "/test1//file"
+	   };
+	  
+	   String[] invalidPath = {
+			   "/..",
+			   "/../",
+			   "/#",
+			   "/../file",
+			   "/..//file",
+			   "/#/file"
+	   };
+	   
+	   System.out.println("\n*******TESTING PATH*******");
+	   
+	   urlTester(urlVal, "www.google.com", "", validPath, invalidPath);
+	    
+	   System.out.println("********************************\n");
+   }
+   
+   
+   public void testUnitTestQuery()
+   {
+	   
+	   UrlValidator urlVal = new UrlValidator(null, null,
+			   UrlValidator.ALLOW_2_SLASHES 
+			   + UrlValidator.ALLOW_ALL_SCHEMES
+			   + UrlValidator.NO_FRAGMENTS
+			   + UrlValidator.ALLOW_LOCAL_URLS
+			   );
+	      
+	   String[] validQuery = {
+			   "?action=view",
+			   "?action=edit&mode=up",
+			   ""
+	   };
+	  
+	   //having trouble deciding what constitutes and invalid query
+	   String[] invalidQuery = {
+
+	   };
+	   
+	   System.out.println("\n*******TESTING QUERY*******");
+	   
+	   urlTester(urlVal, "www.google.com/test1", "", validQuery, invalidQuery);
+	    
+	   System.out.println("********************************\n");
+   }
+   
+   
+   public void testManualTest_2()
    {
 	   UrlValidator urlVal = new UrlValidator(null, null,
 			   UrlValidator.ALLOW_2_SLASHES 
@@ -278,6 +382,8 @@ public class UrlValidatorTest extends TestCase {
 		   String[] validPart, String[] invalidPart)
    
    {
+	   boolean allPass = true;
+	   
 	   for(int i = 0; i < validPart.length; i++ )
 	   {
 		   String validURL = "http://" + prePart + validPart[i] + postPart;
@@ -285,6 +391,7 @@ public class UrlValidatorTest extends TestCase {
 		   if ( !customAssertEquals(true, urlVal.isValid(validURL)) )
 		   {
 			   System.out.println("Expected valid, but test returns invalid: " + validURL);
+			   allPass = false;
 		   }
 	   }
 	   
@@ -297,9 +404,14 @@ public class UrlValidatorTest extends TestCase {
 		   if ( !customAssertEquals(false, urlVal.isValid(invalidURL)) )
 		   {
 			   System.out.println("Expected invalid, but test returns valid: " + invalidURL);
+			   allPass = false;
 		   }
 	   }
 	   
+	   if(allPass)
+	   {
+		   System.out.println("All tests pass.");
+	   }
 	   
    }
 	 
