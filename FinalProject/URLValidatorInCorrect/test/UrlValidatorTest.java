@@ -144,54 +144,79 @@ public class UrlValidatorTest extends TestCase {
    }
    //You need to create more test cases for your Partitions if you need to 
    
-   public void testIsValid()
+   
+   
+   public void testUnitTestFullURL()
    {
 	   
 	   UrlValidator urlVal = new UrlValidator(null, null,
 			   UrlValidator.ALLOW_2_SLASHES 
 			   + UrlValidator.ALLOW_ALL_SCHEMES
 			   + UrlValidator.NO_FRAGMENTS
-			   //+ UrlValidator.ALLOW_LOCAL_URLS
+			   + UrlValidator.ALLOW_LOCAL_URLS
 			   );
 	   
 	   
-	   String[] urlCorrect = {
-			   "http://www.google.com/russell/hi.pdf",
-			   "http://www.google.com/help/me",
-			   "http://www.google.com/helloworld.pdf",
-			   "http://www.pets.com",
-			   "http://www.pets.com:80"
+	   String[] validURL = {
+			   "www.google.com/russell/hi.pdf",
+			   "www.google.com/help/me",
+			   "www.google.com/helloworld.pdf",
+			   "www.pets.com",
+			   "www.pets.com:80"
 	   };
 	   
 	   
-	   String[] urlIncorrect = {
-			   "http://www.google.com/../",
-			   "http://256.256.256.256"
+	   String[] invalidURL = {
+			   "www.google.com/../",
+			   "256.256.256.256"
 	   };
 	   
+	   System.out.println("\n*******TESTING FULL URLs*******");
 	   
-	   for(int i = 0; i < urlCorrect.length; i++ )
-	   {
-		   if ( !customAssertEquals(true, urlVal.isValid(urlCorrect[i])) )
-		   {
-			   System.out.println("Expected valid, but test returns invalid: " + urlCorrect[i]);
-			   
-		   }
-	   }
+	   urlTester(urlVal, "", "", validURL, invalidURL);
 	   
-	   
-	   
-	   for(int i = 0; i < urlIncorrect.length; i++ )
-	   {
-		   if ( !customAssertEquals(false, urlVal.isValid(urlIncorrect[i])) )
-		   {
-			   System.out.println("Expected invalid, but test returns valid: " + urlIncorrect[i]);
-		   }
-	   }
-	   
-	  
-
+	   System.out.println("********************************\n");
    }
+   
+   
+   
+   public void testUnitTestAuthority()
+   {
+	   
+	   UrlValidator urlVal = new UrlValidator(null, null,
+			   UrlValidator.ALLOW_2_SLASHES 
+			   + UrlValidator.ALLOW_ALL_SCHEMES
+			   + UrlValidator.NO_FRAGMENTS
+			   + UrlValidator.ALLOW_LOCAL_URLS
+			   );
+	      
+	   String[] validPart = {
+			   "www.google.com",
+			   "go.com",
+			   "0.0.0.0",
+			   "go.cc",
+			   "255.255.255.255",
+			   "255.com"
+	   };
+	  
+	   String[] invalidPart = {
+			   "256.256.256.256",
+			   "1.2.3.4.5",
+			   "go.a",
+			   "255.com",
+			   "aaa",
+			   ""
+	   };
+	   
+	   System.out.println("\n*******TESTING AUTHORITY*******");
+	   
+	   urlTester(urlVal, "", "", validPart, invalidPart);
+	    
+	   System.out.println("********************************\n");
+   }
+   
+   
+   
    
    public void testRussellManualTest()
    {
@@ -206,7 +231,7 @@ public class UrlValidatorTest extends TestCase {
 	   
 	   String url ="";
 	   
-	   System.out.println("*******MANUAL TESTING*******\n\n");
+	   System.out.println("\n**********MANUAL TESTING**********");
 	   System.out.println("Enter a url for manual testing (enter 'q' to quit): \n");
 	   url = input.nextLine();
 	   
@@ -227,6 +252,8 @@ public class UrlValidatorTest extends TestCase {
 		   url = input.nextLine();
 	   }
 	   
+	   System.out.println("********************************\n");
+	   
 	 }
 	 
 
@@ -238,6 +265,42 @@ public class UrlValidatorTest extends TestCase {
 	   }
 	    
 		return false;
+   }
+   
+   
+   
+   
+   //takes a valid and invalid array of url parts (both the same part type)
+   //and the section of the url string that comes before that part and after
+   //that part (prePart and postPart); it then builds a full url and tests
+   //it against UrlValidator::isValid().
+   private void urlTester(UrlValidator urlVal, String prePart, String postPart, 
+		   String[] validPart, String[] invalidPart)
+   
+   {
+	   for(int i = 0; i < validPart.length; i++ )
+	   {
+		   String validURL = "http://" + prePart + validPart[i] + postPart;
+		   
+		   if ( !customAssertEquals(true, urlVal.isValid(validURL)) )
+		   {
+			   System.out.println("Expected valid, but test returns invalid: " + validURL);
+		   }
+	   }
+	   
+	   
+	   
+	   for(int i = 0; i < invalidPart.length; i++ )
+	   {
+		   String invalidURL = "http://" + prePart + invalidPart[i] + postPart;
+		   
+		   if ( !customAssertEquals(false, urlVal.isValid(invalidURL)) )
+		   {
+			   System.out.println("Expected invalid, but test returns valid: " + invalidURL);
+		   }
+	   }
+	   
+	   
    }
 	 
 
