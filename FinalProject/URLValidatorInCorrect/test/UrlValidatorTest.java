@@ -21,7 +21,6 @@ public class UrlValidatorTest extends TestCase {
 	 		// - Initialize some valid URL pieces we can use to programatically generate url strings
 		// - Instead of initializing invalid URL pieces for *all* of these, we can use valid separators
 		//	 in incorrect places
-<<<<<<< HEAD
 		private String validQuerySeparators = "$-_.+!*'(),";
 		private String validSchemeSeparator = "://";
 		private String validPortSeparator = ":";
@@ -36,21 +35,6 @@ public class UrlValidatorTest extends TestCase {
 		private String[] someInValidProtocols = {":", "", "htp"};
 		private String[] someValidPorts = {"80", "0", "65535"};
 		private String[] someInvalidPorts = {"100000", "65536", "-1", "65a"};
-=======
-	private String validQuerySeparators = ".-_~!$&'()*+,;=";
-	private String validSchemeSeparator = "://";
-	private String validPortSeparator = ":";
-	private String validDomainSeparator = ".";
-	private String validPathChars = "//////////////////////////////.-_~!$&'()*+,;=";		// 66/33 probability of '/' for more realistic paths
-	private String validFragmentSeparator = "#";
-	private String invalidSeparators = "<>\\{}\"";
-	private String[] someValidSubDomains = {"test","www","any","string","0r","numer1c","is--alright"};
-	private String[] someValidTLDs = {"com", "org", "aaa", "blog", "net", "uk", "gov", "edu"};
-	private String[] someInvalidTLDs = {"20", "inValid", "alsoInvalid", "not_This_Time", "\"", "^", "&"};
-	private String[] someValidProtocols = {"http","https","ftp"};
-	private String[] someValidPorts = {":80",":65535",":0"};
-	private String[] someInvalidPorts = {":65536",":-1",":65636",":999999999999999999",":65a"};
->>>>>>> Hopefully final commit for length partitioning
 
    public void myAssert(String url, boolean actual, boolean expected) {
 	   
