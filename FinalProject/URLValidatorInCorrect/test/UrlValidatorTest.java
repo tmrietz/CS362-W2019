@@ -21,6 +21,7 @@ public class UrlValidatorTest extends TestCase {
 	 		// - Initialize some valid URL pieces we can use to programatically generate url strings
 		// - Instead of initializing invalid URL pieces for *all* of these, we can use valid separators
 		//	 in incorrect places
+<<<<<<< HEAD
 		private String validQuerySeparators = "$-_.+!*'(),";
 		private String validSchemeSeparator = "://";
 		private String validPortSeparator = ":";
@@ -35,6 +36,21 @@ public class UrlValidatorTest extends TestCase {
 		private String[] someInValidProtocols = {":", "", "htp"};
 		private String[] someValidPorts = {"80", "0", "65535"};
 		private String[] someInvalidPorts = {"100000", "65536", "-1", "65a"};
+=======
+	private String validQuerySeparators = ".-_~!$&'()*+,;=";
+	private String validSchemeSeparator = "://";
+	private String validPortSeparator = ":";
+	private String validDomainSeparator = ".";
+	private String validPathChars = "//////////////////////////////.-_~!$&'()*+,;=";		// 66/33 probability of '/' for more realistic paths
+	private String validFragmentSeparator = "#";
+	private String invalidSeparators = "<>\\{}\"";
+	private String[] someValidSubDomains = {"test","www","any","string","0r","numer1c","is--alright"};
+	private String[] someValidTLDs = {"com", "org", "aaa", "blog", "net", "uk", "gov", "edu"};
+	private String[] someInvalidTLDs = {"20", "inValid", "alsoInvalid", "not_This_Time", "\"", "^", "&"};
+	private String[] someValidProtocols = {"http","https","ftp"};
+	private String[] someValidPorts = {":80",":65535",":0"};
+	private String[] someInvalidPorts = {":65536",":-1",":65636",":999999999999999999",":65a"};
+>>>>>>> Hopefully final commit for length partitioning
 
    public void myAssert(String url, boolean actual, boolean expected) {
 	   
@@ -133,18 +149,21 @@ public class UrlValidatorTest extends TestCase {
 	 }
 	 
 
-	 public void testRandomLengthPartition() {
+	public void testRandomLengthPartition() {
 
 		// set up url lengths (tested in ranges) for testing steps
+		//		- in theory, URL can be any length, but browsers have limits and 10000 is longer than any
+		//		realistic URL one could expect
 		int[] urlLengths = {
-			0, 
+			0,
+			30, 
 			50,
 			100,
+			500,
 			1000,
-			10000,
-			100000
-			//1000000,
-			//10000000
+			2000,
+			5000,
+			10000																		
 		};
 
 		// initialize our validator
@@ -159,35 +178,55 @@ public class UrlValidatorTest extends TestCase {
 
 		// do some more setup
 		Random randInt = new Random();
-		int positiveTestedPerRangeCount = 0;
-		int negativeTestedPerRangeCount = 0;
+		int positiveTestedPerRangeCount = 0;							// tracks positive test cases per range
+		int negativeTestedPerRangeCount = 0;							// tracks negative test cases per range
 		boolean valid;
-		int rangesTested = 0;											  			// 0-10, 10-100, etc.
+		int rangesTested = 0;											  			// 0-50, 50-100, etc.
 		String url = "";
 
+		System.out.println("/******************RANDOM: length testing | START******************/\n");
+		System.out.println("\n^^^RANGE: 0 - 0\n");
+		
 		// while not all ranges yet tested, generate urls and test for that length range
 		while (rangesTested < urlLengths.length - 1) {
-			int length = randInt.nextInt(urlLengths[rangesTested+1]);
+			int max = urlLengths[rangesTested + 1];
+			int min = urlLengths[rangesTested];
+			int length = randInt.nextInt(max - min) + min;
+			
 			if (rangesTested == 0) {
 				myAssert(url, urlVal.isValid(""), false);			// an empty string is not a URL
 				rangesTested++;
-			} else if (length >= 25) {
+			} else {
+				// do the test
 				valid = randInt.nextBoolean();
 				url = randGenerateUrlOfLength(false, valid, length);
-				myAssert(url, urlVal.isValid(url), valid);
+				boolean test = customAssertEquals(urlVal.isValid(url), valid);
+				
+				// print the test result
+				if (valid && !test) {
+					System.out.println("expected valid:\t\t" + url);
+				} else if (test && !valid) {
+					System.out.println("expected invalid:\t" + url);
+				}
+
+				// increment test counters
 				if (valid) {
 					positiveTestedPerRangeCount++;
 				} else {
 					negativeTestedPerRangeCount++;
 				}
 
+				// make sure each range sees a specified number of positive and negative test cases
+				//		(arbitrary number at the moment)
 				if (positiveTestedPerRangeCount > 3 && negativeTestedPerRangeCount > 3) {
 					rangesTested++;
+					System.out.println("\n^^^RANGE: " + min + " - " + max + "\n");
 					positiveTestedPerRangeCount = 0;
 					negativeTestedPerRangeCount = 0;
 				}
 			}
 		}
+		System.out.println("/******************RANDOM: length testing | END******************/\n");
 	}
    
    
@@ -422,31 +461,35 @@ public class UrlValidatorTest extends TestCase {
 /***************************************Start Rand Testing Functions***************************************/
 
 
-
-
 	public String randGenerateUrlOfLength(boolean changeOrder, boolean valid, int length) {
 		// set up some randomization to determine whether url will be valid
-		if (length <= 10) return "";
+		if (length < 30) return "";
 		Random rand = new Random();
 		int remainingLength = length;
 
 		// set *semi-random* lengths for each url part
 		int protocolLength = 7;
 		remainingLength -= protocolLength;
+		
+		// domain is mandatory so we need to guarantee randomization returns a realistic domain
 		int domainLength = 0;
-		while (domainLength < 25) {
-			rand.nextInt(remainingLength);
+		int domainLimit = remainingLength;
+		if (valid && remainingLength > 253) {												// if valid, only allow 253 domain chars
+			domainLimit = 254;
 		}
-		int domainLength = rand.nextInt(remainingLength);
+		while (domainLength < 20) {																	// make sure to reserve enough space for a real domain
+			domainLength = rand.nextInt(domainLimit);									// limit the chars here
+		}
+
 		remainingLength -= domainLength;
-		int fragmentLength = remainingLength/(rand.nextInt(3) + 1);
+		int fragmentLength = remainingLength/(rand.nextInt(3) + 2);	// make fragments no more than half of length
 		remainingLength -= fragmentLength;
-		int pathLength = remainingLength/(rand.nextInt(3) + 1);		// don't divide by zero
+		int pathLength = remainingLength/(rand.nextInt(3) + 1);			// don't divide by zero
 		remainingLength -= pathLength;
 		int queryLength = remainingLength;
 
 
-		// create individual url parts
+		// create and store individual url parts
 		String[] resultParts = new String[length];
 		resultParts[0] = "http://";																// we may wish to make the protocol random but we'll get faults
 		resultParts[1] = randDomainOfLength(domainLength, valid);
@@ -454,10 +497,10 @@ public class UrlValidatorTest extends TestCase {
 		resultParts[3] = randQueryOfLength(queryLength, valid);
 		resultParts[4] = randFragmentOfLength(fragmentLength, valid);
 
-		// make an order swap if requested in the function call
+		// make a url part order swap if requested in the function call
 		int order[] = {0,1,2,3,4};
 		String resultStr = "";
-		if (changeOrder) {
+		if (changeOrder == true) {
 			int tmp = rand.nextInt(4);
 			order[tmp+1] = tmp;
 			order[tmp] = tmp+1;
@@ -470,25 +513,35 @@ public class UrlValidatorTest extends TestCase {
 		return resultStr;
 	}
 
+
 	public String randDomainOfLength(int length, boolean valid) {
-		if (length <= 15) return "";										// see below for the hard-coded 3
 		Random randInt = new Random();
 		boolean useIP = randInt.nextBoolean();				// choose whether to use an IP for domain
 		int lengthRemaining = length;
 		if (useIP) {
-			System.out.println("USING IP");							// TO DO: create IP generator
-			return "";
+			return randIp(valid);
 		} else {
 			// create domain parts, decrementing length along the way
-			String subdomain = randStringFromArray(this.someValidSubDomains, randInt);
-			lengthRemaining -= subdomain.length();
+			String subdomain = "";
+			String addSub = "";
 			String topLevelDomain = randStringFromArray(this.someValidTLDs, randInt);
 			lengthRemaining -= topLevelDomain.length();
+			
+			// either add one subdomain, or many until <= 63 characters left for the domain name
+			if (lengthRemaining < 63 && lengthRemaining > 10) {				// leave some room for domain name												
+				subdomain = randStringFromArray(this.someValidSubDomains, randInt) + ".";
+			} else {
+				while (lengthRemaining > 63) {													// each domain label may have at max 63 chars
+					addSub = randStringFromArray(this.someValidSubDomains, randInt);
+					subdomain += (addSub + ".");
+					lengthRemaining -= (addSub.length() + 1);
+				}
+			}
 			String domain = RandomStringUtils.randomAlphanumeric(lengthRemaining-3, lengthRemaining-2);		// -3 for separators
+			lengthRemaining -= domain.length();
 			
 			// use the created domain parts to build a string
 			StringBuilder result = new StringBuilder(subdomain);
-			result.append(this.validDomainSeparator);
 			result.append(domain);
 			result.append(this.validDomainSeparator);
 			result.append(topLevelDomain);
@@ -498,7 +551,7 @@ public class UrlValidatorTest extends TestCase {
 			if (! valid) {
 				int invalidCharCount = randInt.nextInt(length/2);
 				while (invalidCharCount > 0) {
-					result.setCharAt(randInt.nextInt(length), randCharFromString(this.invalidSeparators, randInt));
+					result.setCharAt(randInt.nextInt(result.length()), randCharFromString(this.invalidSeparators, randInt));
 					invalidCharCount--;
 				}
 			}
@@ -506,6 +559,7 @@ public class UrlValidatorTest extends TestCase {
 		}
 
 	}
+
 
 	public String randPathOfLength(int length, boolean valid) {
 		if (length <= 2) return "";
@@ -517,7 +571,8 @@ public class UrlValidatorTest extends TestCase {
 		while (numSeparators > 0) {
 			// use valid characters for a valid path, else use randomized invalid chars
 			if (valid) {
-				result.setCharAt(randInt.nextInt(length), randCharFromString(this.validPathChars, randInt));			//may need to change to just '/' ...
+				result.setCharAt(randInt.nextInt(length), randCharFromString(this.validPathChars, randInt));			// may need to change to just '/' ...
+				result.setCharAt(length-1, '/');																																	// finish path with '/'
 			} else {
 				result.setCharAt(randInt.nextInt(length), randCharFromString(this.invalidSeparators, randInt));
 			}
@@ -525,6 +580,7 @@ public class UrlValidatorTest extends TestCase {
 		}
 		return result.toString();
 	}
+
 
 	public String randQueryOfLength(int length, boolean valid) {
 		if (length <= 2) return "";
@@ -545,6 +601,7 @@ public class UrlValidatorTest extends TestCase {
 		}
 		return result.toString();
 	}
+
 
 	public String randFragmentOfLength(int length, boolean valid) {
 		if (length <= 0) return "";
@@ -567,13 +624,16 @@ public class UrlValidatorTest extends TestCase {
 		return result.toString();
 	}
 
+
 	public char randCharFromString(String inputStr, Random rand) {
 		return inputStr.charAt(rand.nextInt(inputStr.length()));
 	}
 
+
 	public String randStringFromArray(String[] inputStrings, Random rand) {
 		return inputStrings[rand.nextInt(inputStrings.length)];
 	}
+
 
 	public char[] setRandomQueryChars(boolean valid) {
 		Random randInt = new Random();
@@ -598,12 +658,27 @@ public class UrlValidatorTest extends TestCase {
 		return queryChars;
 	}
 
+
 	public boolean intInArray(int[] arr, int testInt) {
 		for(int i=0; i<arr.length; i++) {
 			if (arr[i] == testInt)
 				return true;
 		}
 		return false;
+	}
+
+
+	public String randIp(boolean valid) {
+		Random rand = new Random();
+		String result;
+		if (valid) {					// unsure of how legit this is :(
+			result = rand.nextInt(256) + "." + rand.nextInt(256) + "." + rand.nextInt(256) + "." + rand.nextInt(256);
+			result += randStringFromArray(someValidPorts, rand) + "/";
+		} else {
+			result = rand.nextInt(1000) + "." + rand.nextInt(1000) + "." + rand.nextInt(1000) + "." + rand.nextInt(1000);
+			result += randStringFromArray(someInvalidPorts, rand);
+		}
+		return result;		
 	}
 
 
