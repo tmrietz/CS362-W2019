@@ -27,10 +27,13 @@ public class UrlValidatorTest extends TestCase {
 		private String validPathSeparator = "/";
 		private String validFragmentSeparator = "#";
 		private String invalidSeparators = "<>\\~{}\"";
-		private String[] someValidSubDomains = {"test","www","any","string","0r","numer1c","is--alright"};
-		private String[] someValidTLDs = {"com", "org", "aaa", "blog", "net", "uk", "gov", "edu"};
-		private String[] someInvalidTLDs = {"20", "inValid", "alsoInvalid", "not_This_Time", "\"", "^", "&"};
-		private String[] someValidProtocols = {"http","https","ftp"};
+		private String[] someValidSubDomains = {"test","www","any","string","0r","numer1c","is--alright, sup3r"};
+		private String[] someValidTLDs = {"com", "org", "aaa", "blog", "net", "uk", "gov", "edu", "CoM", "COM"};
+		private String[] someInvalidTLDs = {"20", "inValid", "alsoInvalid", "not_This_Time", "\"", "^", "&", ""};
+		private String[] someValidProtocols = {"http","https","ftp", "h3t", "hTtP", "httpS", "file"};
+		private String[] someInValidProtocols = {":", "", "htp"};
+		private String[] someValidPorts = {"80", "0", "65535"};
+		private String[] someInvalidPorts = {"100000", "65536", "-1", "65a"};
 
    public void myAssert(String url, boolean actual, boolean expected) {
 	   
