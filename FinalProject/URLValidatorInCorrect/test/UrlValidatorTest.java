@@ -25,10 +25,11 @@ public class UrlValidatorTest extends TestCase {
 		private String validSchemeSeparator = "://";
 		private String validPortSeparator = ":";
 		private String validDomainSeparator = ".";
+		private String validPathSeparator = "/";
 		private String validPathChars = "//////////////////////////////.-_~!$&'()*+,;=";		// 66/33 probability of '/' for more realistic paths
 		private String validFragmentSeparator = "#";
 		private String invalidSeparators = "<>\\~{}\"";
-		private String[] someValidSubDomains = {"test","www","any","string","0r","numer1c","is--alright, sup3r"};
+		private String[] someValidSubDomains = {"test","www","any","string","0r","numer1c","is--alright", "sup3r"};
 		private String[] someValidTLDs = {"com", "org", "aaa", "blog", "net", "uk", "gov", "edu", "CoM", "COM"};
 		private String[] someInvalidTLDs = {"20", "inValid", "alsoInvalid", "not_This_Time", "\"", "^", "&", ""};
 		private String[] someValidProtocols = {"http","https","ftp", "h3t", "hTtP", "httpS", "file"};
@@ -150,13 +151,13 @@ public class UrlValidatorTest extends TestCase {
 			10000																		
 		};
 
+		// String[] validSchemes = {"http://","https://","ftp://", "h3t://", "hTtP://", "httpS://", "file://"};
 		// initialize our validator
 		UrlValidator urlVal = new UrlValidator (
 			null, 
 			null,
 			UrlValidator.ALLOW_2_SLASHES +
-			UrlValidator.ALLOW_ALL_SCHEMES +
-			UrlValidator.NO_FRAGMENTS + 
+			UrlValidator.ALLOW_ALL_SCHEMES +								// I'm allowing fragments here
 			UrlValidator.ALLOW_LOCAL_URLS
 		);
 
@@ -191,7 +192,9 @@ public class UrlValidatorTest extends TestCase {
 					System.out.println("expected valid:\t\t" + url);
 				} else if (test && !valid) {
 					System.out.println("expected invalid:\t" + url);
-				}
+				} /*else {
+					System.out.println("passed [valid == " + valid + "]: " + url);
+				}*/
 
 				// increment test counters
 				if (valid) {
@@ -212,22 +215,50 @@ public class UrlValidatorTest extends TestCase {
 		}
 		System.out.println("/******************RANDOM: length testing | END******************/\n");
 	}
-   
-   
-   public void testYourFirstPartition()
-   {
-	 //You can use this function to implement your First Partition testing	   
 
-   }
-   
-   public void testYourSecondPartition(){
-		 //You can use this function to implement your Second Partition testing	   
 
-   }
-   //You need to create more test cases for your Partitions if you need to 
-   
-   
-   
+	public void testRandomPartOrderPartition() {
+		// initialize our validator
+		UrlValidator urlVal = new UrlValidator (
+			null, 
+			null,
+			UrlValidator.ALLOW_2_SLASHES +
+			UrlValidator.ALLOW_ALL_SCHEMES +								// I'm allowing fragments here
+			UrlValidator.ALLOW_LOCAL_URLS
+		);
+
+		// do some more setup
+		Random randInt = new Random();
+		int positiveTested = 0;														// tracks positive test cases per range
+		int negativeTested = 0;														// tracks negative test cases per range
+		String url = "";
+		boolean changeOrder = false;
+
+		System.out.println("\n/******************RANDOM: part order testing | START******************/\n");
+		while (positiveTested < 10 && negativeTested < 10) {
+			changeOrder = randInt.nextBoolean();
+			url = randGenerateUrlOfLength(changeOrder, true, 50);
+			boolean test = customAssertEquals(urlVal.isValid(url), !changeOrder);
+			
+			// print the test result
+			if (!changeOrder && test) {
+				System.out.println("expected valid:\t\t" + url);
+			} else if (changeOrder && !test) {
+				System.out.println("expected invalid:\t" + url);
+			}
+			
+			if (changeOrder) {
+				negativeTested++;
+			} else {
+				positiveTested++;
+			}
+		}
+		System.out.println("\n/******************RANDOM: part order testing | END******************/\n");
+
+
+	}
+
+      
    public void testUnitTestFullURL()
    {
 	   
@@ -475,7 +506,7 @@ public class UrlValidatorTest extends TestCase {
 
 		// create and store individual url parts
 		String[] resultParts = new String[length];
-		resultParts[0] = "http://";																// we may wish to make the protocol random but we'll get faults
+		resultParts[0] = "http://";																	// we may wish to make the protocol random but we'll get faults
 		resultParts[1] = randDomainOfLength(domainLength, valid);
 		resultParts[2] = randPathOfLength(pathLength, valid);
 		resultParts[3] = randQueryOfLength(queryLength, valid);
@@ -551,12 +582,16 @@ public class UrlValidatorTest extends TestCase {
 		String str = RandomStringUtils.randomAlphanumeric(length, length+1);			//create a random alphanumeric string
 		int numSeparators = randInt.nextInt(length/2);														//get a random number of separators
 		StringBuilder result = new StringBuilder(str);														//use this for easier char replacement
-		
+		int index = 0;
+
 		while (numSeparators > 0) {
 			// use valid characters for a valid path, else use randomized invalid chars
 			if (valid) {
-				result.setCharAt(randInt.nextInt(length), randCharFromString(this.validPathChars, randInt));			// may need to change to just '/' ...
-				result.setCharAt(length-1, '/');																																	// finish path with '/'
+				index = randInt.nextInt(length);
+				if (index > 0 && result.charAt(index-1) != '/') {
+					result.setCharAt(index, this.validPathSeparator.charAt(0));					// may need to change to just '/' ...
+				}
+				result.setCharAt(length-1, '/');																			// finish path with '/' (kind of ugly that this is in the loop)
 			} else {
 				result.setCharAt(randInt.nextInt(length), randCharFromString(this.invalidSeparators, randInt));
 			}
@@ -656,10 +691,10 @@ public class UrlValidatorTest extends TestCase {
 		Random rand = new Random();
 		String result;
 		if (valid) {					// unsure of how legit this is :(
-			result = rand.nextInt(256) + "." + rand.nextInt(256) + "." + rand.nextInt(256) + "." + rand.nextInt(256);
+			result = rand.nextInt(256) + "." + rand.nextInt(256) + "." + rand.nextInt(256) + "." + rand.nextInt(256) + ":";
 			result += randStringFromArray(someValidPorts, rand) + "/";
 		} else {
-			result = rand.nextInt(1000) + "." + rand.nextInt(1000) + "." + rand.nextInt(1000) + "." + rand.nextInt(1000);
+			result = rand.nextInt(1000) + "." + rand.nextInt(1000) + "." + rand.nextInt(1000) + "." + rand.nextInt(1000) + ":";
 			result += randStringFromArray(someInvalidPorts, rand);
 		}
 		return result;		
