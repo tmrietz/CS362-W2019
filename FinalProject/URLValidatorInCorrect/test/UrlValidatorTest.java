@@ -235,9 +235,9 @@ public class UrlValidatorTest extends TestCase {
 		boolean changeOrder = false;
 
 		System.out.println("\n/******************RANDOM: part order testing | START******************/\n");
-		while (positiveTested < 10 && negativeTested < 10) {
+		while (positiveTested < 20 && negativeTested < 20) {
 			changeOrder = randInt.nextBoolean();
-			url = randGenerateUrlOfLength(changeOrder, true, 50);
+			url = randGenerateUrlOfLength(changeOrder, true, 200);
 			boolean test = customAssertEquals(urlVal.isValid(url), !changeOrder);
 			
 			// print the test result
@@ -516,9 +516,9 @@ public class UrlValidatorTest extends TestCase {
 		int order[] = {0,1,2,3,4};
 		String resultStr = "";
 		if (changeOrder == true) {
-			int tmp = rand.nextInt(4);
-			order[tmp+1] = tmp;
-			order[tmp] = tmp+1;
+			int tmp = rand.nextInt(3);
+			order[tmp+2] = tmp;
+			order[tmp] = tmp+2;
 		}
 
 		// concatenate together the url string
@@ -589,14 +589,14 @@ public class UrlValidatorTest extends TestCase {
 			if (valid) {
 				index = randInt.nextInt(length);
 				if (index > 0 && result.charAt(index-1) != '/') {
-					result.setCharAt(index, this.validPathSeparator.charAt(0));					// may need to change to just '/' ...
+					result.setCharAt(index, this.validPathSeparator.charAt(0));
 				}
-				result.setCharAt(length-1, '/');																			// finish path with '/' (kind of ugly that this is in the loop)
 			} else {
 				result.setCharAt(randInt.nextInt(length), randCharFromString(this.invalidSeparators, randInt));
 			}
 			numSeparators--;
 		}
+		result.setCharAt(length-1, '/');
 		return result.toString();
 	}
 
@@ -618,6 +618,7 @@ public class UrlValidatorTest extends TestCase {
 			}	
 			numQueryChars--;
 		}
+		result.setCharAt(result.length()-1, '/');
 		return result.toString();
 	}
 
