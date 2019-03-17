@@ -59,7 +59,7 @@ runtests: testDrawCard unittest1.o
 	gcov dominion.c >> unittestresult.out
 	cat dominion.c.gcov >> unittestresult.out
 
-unittestresults: dominion.o unittest1.o unittest2.o unittest3.o unittest4.o cardtest1.o cardtest2.o cardtest3.o cardtest4.o
+unittestresults: dominion.o unittest1.o unittest2.o unittest3.o unittest4.o cardtest1.o cardtest2.o cardtest3.o cardtest4.o randomtestcard1.o randomtestcard2.o
 	chmod +x getUnitCoverage.sh
 	chmod +x getFullCoverage.sh
 	rm -f unittestresults.out
