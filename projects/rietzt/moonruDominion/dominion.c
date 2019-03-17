@@ -1136,7 +1136,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 				{
 					if (state->hand[i][j] == copper)
 					{
-						discardCard(j, i, state, 0);
+						discardCard(j, i, state, 1);
 						break;
 					}
 					if (j == state->handCount[i])
